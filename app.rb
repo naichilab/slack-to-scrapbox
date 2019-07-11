@@ -11,7 +11,7 @@ end
 # # CKYR1UP34 tmp_naichi_test
 # return
 
-users = SlackUser.all
+users = SlackUserRepository::all
 
 # .env書き出し
 # users.each do |k, v|
