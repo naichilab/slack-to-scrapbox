@@ -1,3 +1,6 @@
+require 'gyazo'
+
+
 class Scrapbox
   def initialize(users, slack_history, base_indent = 0)
     @users = users
@@ -22,7 +25,6 @@ class Scrapbox
     # 添付ファイル
     @indent += 1
     add_file_lines lines
-
 
 
     lines
@@ -67,7 +69,7 @@ class Scrapbox
         #   # usernameの行に発言を並べる
         #   lines[lines.size-1] += " #{line}"
         # else
-          lines << "#{indent_text}#{line}"
+        lines << "#{indent_text}#{line}"
         # end
       end
 
@@ -79,8 +81,34 @@ class Scrapbox
 
   def add_file_lines(lines)
 
-    @slack_history.files.each do |slackfile|
-      lines << "#{indent_text}添付ファイル : #{slackfile}"
+    # 画像ファイルのダウンロード
+    @slack_history.files.each do |f|
+      url = f.url_private
+      if f.pretty_type != "PNG"
+        pp "not a png file #{f.name}"
+        next
+      end
+
+      # 画像ファイルをダウンロード
+      conn = Faraday.new(:url => url) do |faraday|
+        faraday.request :url_encoded
+        faraday.adapter Faraday.default_adapter # make requests with Net::HTTP
+        faraday.headers['Authorization'] = "Bearer #{ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN']}"
+      end
+      response = conn.get
+
+      if response.status == 200
+        FileUtils.mkdir_p("tmp") unless FileTest.exist?("tmp")
+        filepath = "tmp/#{f.id}.#{f.filetype}"
+        File.open(filepath, 'wb') {|fp| fp.write(response.body)}
+      end
+
+      # Gyazoへアップロード
+      gyazo = Gyazo::Client.new access_token: ENV["GYAZO_ACCESS_TOKEN"]
+      res = gyazo.upload imagefile: filepath
+      gyazo_image_url = res[:url]
+
+      lines << "#{indent_text}[#{gyazo_image_url}]"
     end
 
   end

@@ -2,7 +2,7 @@ require 'faraday'
 
 class SlackApi
 
-  def initialize
+  def initialize()
     @token = ENV['SLACK_BOT_USER_OAUTH_ACCESS_TOKEN']
     @conn = Faraday.new(:url => 'https://slack.com') do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
