@@ -39,9 +39,6 @@ File.open("tmp/conversation.txt","w") do |f|
   f.puts lines.join("\n")
 end
 
-puts lines.join("\n")
-
-
 #
 # def get_channels(conn, token, cursor = nil)
 #

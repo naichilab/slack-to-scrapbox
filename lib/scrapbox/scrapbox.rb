@@ -79,11 +79,9 @@ class Scrapbox
 
   def add_file_lines(lines)
 
-    if @slack_history.file
-      lines << "#{indent_text}添付ファイル : #{@slack_history.file}"
+    @slack_history.files.each do |slackfile|
+      lines << "#{indent_text}添付ファイル : #{slackfile}"
     end
-
-
 
   end
 

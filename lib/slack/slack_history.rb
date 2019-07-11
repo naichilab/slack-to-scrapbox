@@ -1,6 +1,14 @@
 class SlackHistory
   def initialize(json)
     @json = json
+    @files = []
+
+
+    if json["files"]
+      json["files"].each do |f|
+        @files << SlackFile.new(f)
+      end
+    end
   end
 
   def type
@@ -23,9 +31,8 @@ class SlackHistory
     json[ts]
   end
 
-  def file
-    file = nil
-    file = json["files"].first["name"] if json["files"]
+  def files
+    @files
   end
 
   def to_s
