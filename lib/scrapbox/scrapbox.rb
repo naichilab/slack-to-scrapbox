@@ -61,10 +61,10 @@ class Scrapbox
           lines << "#{indent_text}#{line}"
         end
       else
-        line.gsub!(/&gt;/,'>')
-        line.gsub!(/\*(.*?)\*/){"[* #{$1}]"}
-        line.gsub!(/_(.*?)_/){"[/ #{$1}]"}
-        line.gsub!(/~(.*?)~/){"[- #{$1}]"}
+        line.gsub!(/&gt;/, '>')
+        line.gsub!(/\*(.*?)\*/) {"[* #{$1}]"}
+        line.gsub!(/_(.*?)_/) {"[/ #{$1}]"}
+        line.gsub!(/~(.*?)~/) {"[- #{$1}]"}
         lines << "#{indent_text}#{line}"
       end
 
@@ -138,18 +138,22 @@ class Scrapbox
     slack_user_id = @slack_history.user
     env_key = "SCR_USER_#{@slack_history.user}"
     scrapbox_user_id = ENV[env_key]
-    if scrapbox_user_id.nil? || scrapbox_user_id == ""
+    if scrapbox_user_id != nil && scrapbox_user_id != ""
+      user_name = "[#{scrapbox_user_id}.icon]"
+    else
       pp "unknown scarapbox user : #{env_key}"
-      user = @users[slack_user_id]
+    end
+
+    unless user_name
+      user = @users.find {|u| u.id == slack_user_id}
       if user
-        user_name = user.real_name
+        user_name += " #{user.real_name}"
       else
         user_name = "unknown"
       end
-    else
-      user_name = "[#{scrapbox_user_id}.icon]"
     end
 
+    user_name
   end
 
 end
