@@ -37,12 +37,6 @@ class SlackFile
     "#{name}"
   end
 
-  def json2
-    @json
-  end
-
-  private
-
   def json
     @json
   end

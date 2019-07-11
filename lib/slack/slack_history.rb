@@ -39,8 +39,6 @@ class SlackHistory
     "#{@type} #{@user} #{@ts} #{@text}"
   end
 
-  private
-
   def json
     @json
   end
