@@ -81,7 +81,6 @@ class Scrapbox
 
     if @slack_history.file
       lines << "#{indent_text}添付ファイル : #{@slack_history.file}"
-      pp @slack_history.json
     end
 
 

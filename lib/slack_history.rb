@@ -1,18 +1,41 @@
 class SlackHistory
-  attr_reader :json, :type, :subtype, :text, :user, :ts, :file
-
-  def initialize(json, type, subtype, text, user, ts, file)
+  def initialize(json)
     @json = json
-    @type = type
-    @subtype = subtype
-    @text = text
-    @user = user
-    @ts = ts
-    @file = file
+  end
+
+  def type
+    json["type"]
+  end
+
+  def subtype
+    json["subtype"]
+  end
+
+  def text
+    json["text"]
+  end
+
+  def user
+    json["user"]
+  end
+
+  def ts
+    json[ts]
+  end
+
+  def file
+    file = nil
+    file = json["files"].first["name"] if json["files"]
   end
 
   def to_s
     "#{@type} #{@user} #{@ts} #{@text}"
+  end
+
+  private
+
+  def json
+    @json
   end
 
 end

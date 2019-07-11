@@ -16,9 +16,7 @@ class SlackHistoryRepository
       json = api.get('/api/channels.history', params_hash)
 
       json["messages"].each do |msg|
-        file = nil
-        file = msg["files"].first["name"] if msg["files"]
-        res << SlackHistory.new(msg, msg["type"], msg["subtype"], msg["text"], msg["user"], msg["ts"], file)
+        res << SlackHistory.new(msg)
         latest = msg["ts"]
       end
 
