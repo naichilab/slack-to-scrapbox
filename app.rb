@@ -3,10 +3,9 @@ require 'dotenv/load'
 require 'faraday'
 require 'json'
 
-require_relative 'lib/slack_user'
-require_relative 'lib/slack_channel'
-require_relative 'lib/slack_history'
-require_relative 'lib/scrapbox'
+Dir[File.expand_path("../lib/", __FILE__) << '/*.rb'].each do | file |
+  require file
+end
 
 # pp SlackChannel.find_by_name_like("tmp_naichi_test")
 # # CKYR1UP34 tmp_naichi_test
