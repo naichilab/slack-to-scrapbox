@@ -19,7 +19,7 @@ users = SlackUserRepository::all
 # end
 
 # pp SlackChannel.find_by_id("CL2D9RQ15")
-histories = SlackHistory.all("CKYR1UP34") # tmp_naichi_test
+histories = SlackHistoryRepository::all("CKYR1UP34") # tmp_naichi_test
 # histories = SlackHistory.all("CL2D9RQ15") # たあけいく
 
 lines = []
