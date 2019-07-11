@@ -3,8 +3,8 @@ require 'dotenv/load'
 require 'faraday'
 require 'json'
 
-Dir[File.expand_path("../lib/slack/", __FILE__) << '/*.rb'].each {|f| require f }
-Dir[File.expand_path("../lib/scrapbox/", __FILE__) << '/*.rb'].each {|f| require f }
+Dir[File.expand_path("../lib/slack/", __FILE__) << '/*.rb'].each {|f| require f}
+Dir[File.expand_path("../lib/scrapbox/", __FILE__) << '/*.rb'].each {|f| require f}
 
 
 # pp SlackChannel.find_by_name_like("tmp_naichi_test")
@@ -25,6 +25,10 @@ histories = SlackHistoryRepository::all("CKYR1UP34") # tmp_naichi_test
 lines = []
 histories.each do |h|
 
+  if h.text.include?("添付")
+    pp h.json
+  end
+
   scrapbox_lines = Scrapbox.new(users, h).convert
   lines << scrapbox_lines
 
@@ -35,7 +39,7 @@ lines.compact!
 lines.reject(&:empty?)
 
 FileUtils.mkdir_p("tmp") unless FileTest.exist?("tmp")
-File.open("tmp/conversation.txt","w") do |f|
+File.open("tmp/conversation.txt", "w") do |f|
   f.puts lines.join("\n")
 end
 
@@ -65,8 +69,6 @@ end
 #
 # #
 #
-
-
 
 
 # response = conn.get , {token: token}
