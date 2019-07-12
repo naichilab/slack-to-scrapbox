@@ -80,7 +80,7 @@ class Scrapbox
     @slack_history.files.each do |f|
       url = f.url_private
 
-      if f.pretty_type == "PNG"
+      if %w(PNG JPEG GIF).include? f.pretty_type
 
         # 画像ファイルをダウンロード
         conn = Faraday.new(:url => url) do |faraday|
@@ -122,11 +122,13 @@ class Scrapbox
         end
         @indent -= 1
 
-
+      elsif ["MPEG 4ビデオ", "Zip", "MP3", "GZip", "PDF"].include? f.pretty_type
+        lines << "#{indent_text}添付ファイル : #{f.name}"
       else
         lines << "#{indent_text}添付ファイル : #{f.name}"
+        pp "=" * 100
         pp "unknown filetype. #{f.name}"
-        next
+        pp f.json
       end
 
     end
@@ -147,7 +149,7 @@ class Scrapbox
     unless user_name
       user = @users.find {|u| u.id == slack_user_id}
       if user
-        user_name += " #{user.real_name}"
+        user_name = " #{user.real_name}"
       else
         user_name = "unknown"
       end

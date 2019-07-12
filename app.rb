@@ -7,9 +7,7 @@ Dir[File.expand_path("../lib/slack/", __FILE__) << '/*.rb'].each {|f| require f}
 Dir[File.expand_path("../lib/scrapbox/", __FILE__) << '/*.rb'].each {|f| require f}
 
 
-# pp SlackChannel.find_by_name_like("tmp_naichi_test")
-# # CKYR1UP34 tmp_naichi_test
-# return
+channel = SlackChannel.find_by_name_like("kakoton")
 
 users = SlackUserRepository::all
 
@@ -19,19 +17,16 @@ users = SlackUserRepository::all
 # end
 
 # pp SlackChannel.find_by_id("CL2D9RQ15")
-histories = SlackHistoryRepository::all("CKYR1UP34") # tmp_naichi_test
-# histories = SlackHistory.all("CL2D9RQ15") # たあけいく
+histories = SlackHistoryRepository::all(channel.id)
 
 lines = []
-histories.each do |h|
-
-  if h.text.include?("添付")
-    pp h.json
+histories.each_with_index do |h, idx|
+  if idx % 100 == 0
+    pp "history #{idx}"
   end
 
   scrapbox_lines = Scrapbox.new(users, h).convert
   lines << scrapbox_lines
-
 end
 
 lines.flatten!
@@ -40,7 +35,7 @@ lines.reject(&:empty?)
 
 FileUtils.mkdir_p("tmp") unless FileTest.exist?("tmp")
 File.open("tmp/conversation.txt", "w") do |f|
-  f.puts lines.join("\n")
+  f.puts lines.map {|line| line.force_encoding('UTF-8')}.join("\n")
 end
 
 #
